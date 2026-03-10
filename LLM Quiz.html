@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Arena — Who's the Best?</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --surface: #0e1420;
+    --card: #131a27;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --gold: #ffd700;
+    --green: #00e676;
+    --red: #ff4757;
+    --text: #e8f0fe;
+    --muted: #5a7a9a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 50% 40% at 50% 0%, rgba(0,212,255,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 30% at 90% 80%, rgba(255,107,53,0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── HEADER ── */
+  header { text-align: center; margin-bottom: 40px; }
+
+  .logo {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(3rem, 8vw, 5rem);
+    letter-spacing: 4px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent), #fff 50%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .logo-sub {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-strip {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 32px;
+    align-items: center;
+  }
+
+  .progress-dot {
+    flex: 1; height: 4px; border-radius: 99px;
+    background: var(--border);
+    transition: background 0.4s ease;
+  }
+
+  .progress-dot.done    { background: var(--green); }
+  .progress-dot.current { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+
+  .progress-label {
+    font-size: 0.72rem; color: var(--muted); font-weight: 600;
+    white-space: nowrap; margin-left: 10px;
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 28px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.4s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  }
+
+  .q-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .q-number {
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px;
+    color: var(--accent); font-weight: 600; margin-bottom: 10px;
+  }
+
+  .q-icon { font-size: 2.2rem; margin-bottom: 10px; display: block; }
+
+  .q-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.9rem;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+
+  .q-sub {
+    font-size: 0.82rem; color: var(--muted); font-weight: 500;
+    margin-bottom: 24px;
+  }
+
+  /* ── OPTIONS ── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.06);
+    transform: translateX(4px);
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  .option-btn.selected-correct {
+    border-color: var(--green);
+    background: rgba(0,230,118,0.08);
+  }
+
+  .option-btn.selected-wrong {
+    border-color: var(--red);
+    background: rgba(255,71,87,0.08);
+  }
+
+  .option-btn.reveal-correct {
+    border-color: var(--gold);
+    background: rgba(255,215,0,0.06);
+  }
+
+  .option-letter {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .option-btn.selected-correct .option-letter { background: var(--green); color: #000; }
+  .option-btn.selected-wrong   .option-letter { background: var(--red);   color: #fff; }
+  .option-btn.reveal-correct   .option-letter { background: var(--gold);  color: #000; }
+
+  .option-text { flex: 1; }
+  .option-name { font-size: 0.92rem; font-weight: 600; line-height: 1.3; }
+  .option-maker { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
+
+  .option-result-icon {
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .option-btn.selected-correct .option-result-icon,
+  .option-btn.selected-wrong   .option-result-icon,
+  .option-btn.reveal-correct   .option-result-icon { opacity: 1; }
+
+  /* ── FEEDBACK BANNER ── */
+  .feedback-banner {
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.6;
+    margin-top: 16px;
+    display: none;
+    animation: fadeUp 0.3s ease both;
+  }
+  .feedback-banner.show { display: block; }
+  .feedback-banner.correct { background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.3); color: #6effa0; }
+  .feedback-banner.wrong   { background: rgba(255,71,87,0.1);  border: 1px solid rgba(255,71,87,0.3);  color: #ff8a95; }
+  .feedback-banner strong { display: block; font-size: 1rem; margin-bottom: 3px; }
+
+  /* ── NEXT BTN ── */
+  .btn-next {
+    width: 100%; margin-top: 16px;
+    background: linear-gradient(135deg, #0090b3, var(--accent));
+    color: #000; border: none; border-radius: 14px;
+    padding: 15px; font-family: 'Bebas Neue', cursive;
+    font-size: 1.2rem; letter-spacing: 2px;
+    cursor: pointer; display: none;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .btn-next.show { display: block; }
+  .btn-next:hover { transform: translateY(-2px); opacity: 0.9; }
+
+  /* ── SCORE HUD ── */
+  .score-hud {
+    display: flex; gap: 12px; margin-bottom: 20px;
+  }
+
+  .hud-pill {
+    flex: 1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 10px; text-align: center;
+  }
+
+  .hud-val { font-family: 'Bebas Neue', cursive; font-size: 1.6rem; color: var(--accent); }
+  .hud-val.correct-v { color: var(--green); }
+  .hud-val.wrong-v   { color: var(--red); }
+  .hud-label-s { font-size: 0.62rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── RESULTS SCREEN ── */
+  .results-screen { display: none; animation: fadeUp 0.5s ease both; }
+  .results-screen.show { display: block; }
+
+  .results-header { text-align: center; margin-bottom: 32px; }
+
+  .results-trophy { font-size: 4rem; display: block; margin-bottom: 12px; animation: bounce 1s ease infinite; }
+
+  .results-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3rem; letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--gold), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+
+  .results-sub { color: var(--muted); font-size: 0.85rem; font-weight: 500; }
+
+  .results-score-big {
+    text-align: center; margin: 20px 0 32px;
+    padding: 24px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 20px;
+  }
+
+  .rsb-num { font-family: 'Bebas Neue', cursive; font-size: 5rem; color: var(--gold); line-height: 1; }
+  .rsb-label { font-size: 0.75rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+
+  /* Community votes table */
+  .votes-section { margin-bottom: 32px; }
+
+  .votes-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.4rem; letter-spacing: 2px;
+    color: var(--accent); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .votes-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; margin-bottom: 14px;
+  }
+
+  .votes-card-header {
+    padding: 14px 18px;
+    background: rgba(0,212,255,0.05);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.78rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: var(--accent);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .vote-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 18px;
+    border-bottom: 1px solid rgba(30,45,69,0.5);
+    transition: background 0.15s;
+  }
+
+  .vote-row:last-child { border-bottom: none; }
+  .vote-row.winner { background: rgba(255,215,0,0.04); }
+
+  .vote-rank { font-family: 'Bebas Neue', cursive; font-size: 1rem; color: var(--muted); min-width: 20px; }
+  .vote-rank.gold { color: var(--gold); }
+
+  .vote-name { flex: 1; font-size: 0.85rem; font-weight: 600; }
+  .vote-maker { font-size: 0.7rem; color: var(--muted); }
+  .vote-correct-badge {
+    font-size: 0.62rem; background: rgba(255,215,0,0.15); color: var(--gold);
+    border: 1px solid rgba(255,215,0,0.3); border-radius: 99px;
+    padding: 2px 8px; font-weight: 700; white-space: nowrap;
+  }
+
+  .vote-bar-wrap { width: 80px; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .vote-bar-fill { height: 100%; border-radius: 99px; background: var(--accent); transition: width 1s ease; }
+  .vote-row.winner .vote-bar-fill { background: var(--gold); }
+
+  .vote-count { font-family: 'Bebas Neue', cursive; font-size: 1rem; color: var(--text); min-width: 24px; text-align: right; }
+
+  .btn-restart {
+    width: 100%; background: linear-gradient(135deg, var(--accent2), #ff8c42);
+    color: #fff; border: none; border-radius: 14px; padding: 16px;
+    font-family: 'Bebas Neue', cursive; font-size: 1.3rem; letter-spacing: 2px;
+    cursor: pointer; transition: transform 0.15s;
+  }
+  .btn-restart:hover { transform: scale(1.02); }
+
+  /* ── LOADING ── */
+  .loading-bar {
+    height: 2px; background: var(--border); border-radius: 99px;
+    overflow: hidden; margin-bottom: 24px;
+  }
+  .loading-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    animation: loadAnim 1.5s ease forwards;
+  }
+  @keyframes loadAnim { to { width: 100%; } }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="logo">AI Arena</div>
+    <div class="logo-sub">⚡ Who's the Best? · Community Quiz</div>
+  </header>
+
+  <!-- Score HUD -->
+  <div class="score-hud">
+    <div class="hud-pill"><div class="hud-val correct-v" id="hud-correct">0</div><div class="hud-label-s">✓ Correct</div></div>
+    <div class="hud-pill"><div class="hud-val wrong-v"   id="hud-wrong">0</div><div class="hud-label-s">✗ Wrong</div></div>
+    <div class="hud-pill"><div class="hud-val"           id="hud-q">1/5</div><div class="hud-label-s">Question</div></div>
+  </div>
+
+  <!-- Progress dots -->
+  <div class="progress-strip" id="progress-strip">
+    <div class="progress-dot current" id="dot-0"></div>
+    <div class="progress-dot" id="dot-1"></div>
+    <div class="progress-dot" id="dot-2"></div>
+    <div class="progress-dot" id="dot-3"></div>
+    <div class="progress-dot" id="dot-4"></div>
+    <div class="progress-label" id="progress-label">Q1 of 5</div>
+  </div>
+
+  <!-- Quiz area -->
+  <div id="quiz-area"></div>
+
+  <!-- Results screen -->
+  <div class="results-screen" id="results-screen">
+    <div class="results-header">
+      <span class="results-trophy" id="trophy-icon">🏆</span>
+      <div class="results-title" id="results-title">Results</div>
+      <div class="results-sub" id="results-sub"></div>
+    </div>
+
+    <div class="results-score-big">
+      <div class="rsb-num" id="final-score"></div>
+      <div class="rsb-label">correct out of 5</div>
+    </div>
+
+    <div class="votes-section" id="votes-section"></div>
+
+    <button class="btn-restart" onclick="restartQuiz()">🔄 Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    id: 'image',
+    icon: '🖼️',
+    title: 'Best Image Generator',
+    sub: 'Which AI model produces the best image outputs right now?',
+    correct: 0,
+    options: [
+      { name: 'GPT Image 1.5',         maker: 'OpenAI' },
+      { name: 'Gemini 3 Pro Image',     maker: 'Google' },
+      { name: 'Nano Banana',            maker: 'Google' },
+      { name: 'Flux 2 Pro',             maker: 'Black Forest Labs' },
+      { name: 'Grok Imagine Image',     maker: 'xAI / Grok' },
+    ]
+  },
+  {
+    id: 'video',
+    icon: '🎬',
+    title: 'Best Video Generator',
+    sub: 'Which AI model generates the best video content?',
+    correct: 0,
+    options: [
+      { name: 'Grok Imagine Video',     maker: 'xAI / Grok' },
+      { name: 'Veo 3.0 Fast',           maker: 'Google' },
+      { name: 'Veo 3.1',                maker: 'Google' },
+      { name: 'WAN Video 2.6',          maker: 'Alibaba' },
+      { name: 'Sora 2',                 maker: 'OpenAI' },
+    ]
+  },
+  {
+    id: 'tts',
+    icon: '🔊',
+    title: 'Best Text-to-Speech',
+    sub: 'Which model produces the most natural AI-generated voice?',
+    correct: 0,
+    options: [
+      { name: 'Eleven Turbo v2.5',      maker: 'ElevenLabs' },
+      { name: 'Arcana V2',              maker: 'Rime' },
+      { name: 'Aura Stella',            maker: 'Deepgram' },
+      { name: 'Inworld TTS-1-Max',      maker: 'Inworld' },
+      { name: 'Eleven Flash v2.5',      maker: 'ElevenLabs' },
+    ]
+  },
+  {
+    id: 'stt',
+    icon: '🎤',
+    title: 'Best Speech-to-Text',
+    sub: 'Which model transcribes spoken English most accurately?',
+    correct: 0,
+    options: [
+      { name: 'Whisper Large V3 Turbo', maker: 'OpenAI' },
+      { name: 'Whisper V3 Large',       maker: 'Fireworks' },
+      { name: 'Best',                   maker: 'AssemblyAI' },
+      { name: 'Whisper V1',             maker: 'OpenAI' },
+      { name: 'Nova 3',                 maker: 'Deepgram' },
+    ]
+  },
+  {
+    id: 'writing',
+    icon: '✍️',
+    title: 'Best English Writing Generator',
+    sub: 'Which LLM writes the best English — clearest, most fluent, most nuanced?',
+    correct: 0,
+    options: [
+      { name: 'Claude Opus 4.6',        maker: 'Anthropic' },
+      { name: 'Grok-4 Fast Reasoning',  maker: 'xAI / Grok' },
+      { name: 'GLM 4.5',                maker: 'Z.ai / Tsinghua' },
+      { name: 'Claude Sonnet 4.5',      maker: 'Anthropic' },
+      { name: 'DeepSeek V3.2 Exp',      maker: 'DeepSeek' },
+    ]
+  },
+];
+
+const LETTERS = ['A','B','C','D','E'];
+
+// ── Shared vote storage (localStorage as shared simulation)
+// In a real deployment, replace with a backend/Supabase call
+const STORAGE_KEY = 'ai_arena_votes_v1';
+
+function getVotes() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  // Start from zero — no fake seeding
+  return {
+    image:   [0, 0, 0, 0, 0],
+    video:   [0, 0, 0, 0, 0],
+    tts:     [0, 0, 0, 0, 0],
+    stt:     [0, 0, 0, 0, 0],
+    writing: [0, 0, 0, 0, 0],
+  };
+}
+
+function addVote(qId, optionIdx) {
+  const votes = getVotes();
+  votes[qId][optionIdx]++;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+}
+
+// ── State
+let currentQ = 0;
+let userAnswers = [];
+let correctCount = 0;
+let wrongCount = 0;
+let shuffledOrders = []; // shuffled display order per question
+
+function buildShuffledOrders() {
+  shuffledOrders = QUESTIONS.map(q => {
+    const indices = q.options.map((_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    return indices;
+  });
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  const order = shuffledOrders[currentQ];
+  const area = document.getElementById('quiz-area');
+
+  const optionsHTML = order.map((origIdx, displayPos) => {
+    const opt = q.options[origIdx];
+    return `
+    <button class="option-btn" id="opt-${displayPos}" onclick="selectAnswer(${displayPos})">
+      <div class="option-letter">${LETTERS[displayPos]}</div>
+      <div class="option-text">
+        <div class="option-name">${opt.name}</div>
+        <div class="option-maker">${opt.maker}</div>
+      </div>
+      <div class="option-result-icon" id="icon-${displayPos}"></div>
+    </button>
+  `}).join('');
+
+  area.innerHTML = `
+    <div class="q-card" id="q-card">
+      <div class="q-number">Question ${currentQ + 1} of ${QUESTIONS.length}</div>
+      <span class="q-icon">${q.icon}</span>
+      <div class="q-title">${q.title}</div>
+      <div class="q-sub">${q.sub}</div>
+      <div class="options">${optionsHTML}</div>
+      <div class="feedback-banner" id="feedback"></div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+        ${currentQ < QUESTIONS.length - 1 ? 'Next Question →' : 'See Results 🏆'}
+      </button>
+    </div>
+  `;
+
+  // Update progress
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    const dot = document.getElementById(`dot-${i}`);
+    if (!dot) continue;
+    dot.className = 'progress-dot';
+    if (i < currentQ) dot.classList.add('done');
+    else if (i === currentQ) dot.classList.add('current');
+  }
+  document.getElementById('progress-label').textContent = `Q${currentQ+1} of ${QUESTIONS.length}`;
+  document.getElementById('hud-q').textContent = `${currentQ+1}/${QUESTIONS.length}`;
+}
+
+function selectAnswer(displayPos) {
+  const q = QUESTIONS[currentQ];
+  const order = shuffledOrders[currentQ];
+  const origIdx = order[displayPos];              // original data index of what user clicked
+  const correctDisplayPos = order.indexOf(q.correct); // where correct answer sits on screen
+  const isCorrect = origIdx === q.correct;
+
+  // Disable all options
+  order.forEach((_, dp) => {
+    const btn = document.getElementById(`opt-${dp}`);
+    if (btn) btn.disabled = true;
+  });
+
+  // Style chosen option
+  const chosenBtn = document.getElementById(`opt-${displayPos}`);
+  if (isCorrect) {
+    chosenBtn.classList.add('selected-correct');
+    document.getElementById(`icon-${displayPos}`).textContent = '✓';
+    correctCount++;
+  } else {
+    chosenBtn.classList.add('selected-wrong');
+    document.getElementById(`icon-${displayPos}`).textContent = '✗';
+    // Reveal correct answer at its display position
+    const correctBtn = document.getElementById(`opt-${correctDisplayPos}`);
+    correctBtn.classList.add('reveal-correct');
+    document.getElementById(`icon-${correctDisplayPos}`).textContent = '★';
+    wrongCount++;
+  }
+
+  // Record vote using original index
+  addVote(q.id, origIdx);
+  userAnswers.push(origIdx);
+
+  // Feedback
+  const fb = document.getElementById('feedback');
+  const correctName = q.options[q.correct].name;
+  const correctMaker = q.options[q.correct].maker;
+  if (isCorrect) {
+    fb.className = 'feedback-banner correct show';
+    fb.innerHTML = `<strong>✓ Correct!</strong>Yes — <strong>${correctName}</strong> by ${correctMaker} currently leads this category on benchmark leaderboards.`;
+  } else {
+    fb.className = 'feedback-banner wrong show';
+    fb.innerHTML = `<strong>✗ Not quite!</strong>The current leader is <strong>${correctName}</strong> by ${correctMaker}.`;
+  }
+
+  // Update HUD
+  document.getElementById('hud-correct').textContent = correctCount;
+  document.getElementById('hud-wrong').textContent = wrongCount;
+
+  // Show next
+  document.getElementById('btn-next').classList.add('show');
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= QUESTIONS.length) {
+    showResults();
+  } else {
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-area').style.display = 'none';
+  const rs = document.getElementById('results-screen');
+  rs.classList.add('show');
+
+  document.getElementById('final-score').textContent = `${correctCount}/5`;
+
+  let title, sub, trophy;
+  if (correctCount === 5)      { title='Perfect Score!'; sub='You\'re an AI expert! 🎯'; trophy='🏆'; }
+  else if (correctCount >= 3)  { title='Well Done!';     sub='You know your AI tools well.'; trophy='🥈'; }
+  else if (correctCount >= 1)  { title='Good Try!';      sub='The AI landscape moves fast — keep exploring!'; trophy='🥉'; }
+  else                          { title='Tough Round!';   sub='Now you know the current leaders!'; trophy='😅'; }
+
+  document.getElementById('trophy-icon').textContent = trophy;
+  document.getElementById('results-title').textContent = title;
+  document.getElementById('results-sub').textContent = sub;
+
+  // Build community votes section
+  const votes = getVotes();
+  let html = '';
+
+  QUESTIONS.forEach((q, qi) => {
+    const qVotes = votes[q.id];
+    const total = qVotes.reduce((a,b)=>a+b, 0);
+    const sorted = q.options.map((opt, i) => ({ opt, i, count: qVotes[i] }))
+                            .sort((a,b) => b.count - a.count);
+    const maxVotes = sorted[0].count;
+
+    html += `
+      <div class="votes-card">
+        <div class="votes-card-header">${q.icon} ${q.title}</div>
+        ${sorted.map((item, rank) => {
+          const pct = total > 0 ? Math.round(item.count / total * 100) : 0;
+          const isCorrect = item.i === q.correct;
+          const isWinner = rank === 0;
+          return `
+            <div class="vote-row ${isWinner ? 'winner' : ''}">
+              <div class="vote-rank ${isWinner ? 'gold' : ''}">${rank+1}</div>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span class="vote-name">${item.opt.name}</span>
+                  ${isCorrect ? '<span class="vote-correct-badge">★ Correct</span>' : ''}
+                </div>
+                <div class="vote-maker">${item.opt.maker}</div>
+              </div>
+              <div class="vote-bar-wrap">
+                <div class="vote-bar-fill" style="width:${pct}%"></div>
+              </div>
+              <div class="vote-count">${item.count}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  });
+
+  document.getElementById('votes-section').innerHTML = `
+    <div class="votes-title">📊 Community Votes</div>
+    ${html}
+    <div style="font-size:0.72rem;color:var(--muted);text-align:center;margin-top:12px;font-weight:600;">
+      Vote counts accumulate as more people play on this device. For shared counts across all users, a backend is needed.
+    </div>
+  `;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restartQuiz() {
+  currentQ = 0;
+  userAnswers = [];
+  correctCount = 0;
+  wrongCount = 0;
+  document.getElementById('hud-correct').textContent = '0';
+  document.getElementById('hud-wrong').textContent = '0';
+  document.getElementById('results-screen').classList.remove('show');
+  document.getElementById('quiz-area').style.display = 'block';
+  buildShuffledOrders();
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Init
+buildShuffledOrders();
+renderQuestion();
+</script>
+</body>
+</html>
