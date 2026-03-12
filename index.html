@@ -30,7 +30,6 @@
     overflow-x: hidden;
   }
 
-  /* Animated grid background */
   body::before {
     content: '';
     position: fixed;
@@ -62,7 +61,6 @@
     padding: 40px 20px 80px;
   }
 
-  /* ── HEADER ── */
   header { text-align: center; margin-bottom: 40px; }
 
   .logo {
@@ -85,7 +83,6 @@
     font-weight: 500;
   }
 
-  /* ── PROGRESS ── */
   .progress-strip {
     display: flex;
     gap: 6px;
@@ -107,7 +104,6 @@
     white-space: nowrap; margin-left: 10px;
   }
 
-  /* ── QUESTION CARD ── */
   .q-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -148,7 +144,6 @@
     margin-bottom: 24px;
   }
 
-  /* ── OPTIONS ── */
   .options { display: flex; flex-direction: column; gap: 10px; }
 
   .option-btn {
@@ -175,31 +170,17 @@
   }
 
   .option-btn:disabled { cursor: default; }
-
-  .option-btn.selected-correct {
-    border-color: var(--green);
-    background: rgba(0,230,118,0.08);
-  }
-
-  .option-btn.selected-wrong {
-    border-color: var(--red);
-    background: rgba(255,71,87,0.08);
-  }
-
-  .option-btn.reveal-correct {
-    border-color: var(--gold);
-    background: rgba(255,215,0,0.06);
-  }
+  .option-btn.selected-correct { border-color: var(--green); background: rgba(0,230,118,0.08); }
+  .option-btn.selected-wrong   { border-color: var(--red);   background: rgba(255,71,87,0.08); }
+  .option-btn.reveal-correct   { border-color: var(--gold);  background: rgba(255,215,0,0.06); }
 
   .option-letter {
     width: 30px; height: 30px; border-radius: 8px;
     background: var(--border);
     display: flex; align-items: center; justify-content: center;
     font-family: 'Bebas Neue', cursive;
-    font-size: 1rem;
-    letter-spacing: 1px;
-    color: var(--muted);
-    flex-shrink: 0;
+    font-size: 1rem; letter-spacing: 1px;
+    color: var(--muted); flex-shrink: 0;
     transition: all 0.2s;
   }
 
@@ -208,38 +189,48 @@
   .option-btn.reveal-correct   .option-letter { background: var(--gold);  color: #000; }
 
   .option-text { flex: 1; }
-  .option-name { font-size: 0.92rem; font-weight: 600; line-height: 1.3; }
+  .option-name  { font-size: 0.92rem; font-weight: 600; line-height: 1.3; }
   .option-maker { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
 
-  .option-result-icon {
-    font-size: 1.2rem;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
+  .option-result-icon { font-size: 1.2rem; opacity: 0; transition: opacity 0.3s; }
   .option-btn.selected-correct .option-result-icon,
   .option-btn.selected-wrong   .option-result-icon,
   .option-btn.reveal-correct   .option-result-icon { opacity: 1; }
 
-  /* ── FEEDBACK BANNER ── */
   .feedback-banner {
-    border-radius: 12px;
-    padding: 14px 16px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    line-height: 1.6;
-    margin-top: 16px;
-    display: none;
+    border-radius: 12px; padding: 14px 16px;
+    font-size: 0.88rem; font-weight: 600; line-height: 1.6;
+    margin-top: 16px; display: none;
     animation: fadeUp 0.3s ease both;
   }
-  .feedback-banner.show { display: block; }
-  .feedback-banner.correct { background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.3); color: #6effa0; }
+  .feedback-banner.show    { display: block; }
+  .feedback-banner.correct { background: rgba(0,230,118,0.1);  border: 1px solid rgba(0,230,118,0.3);  color: #6effa0; }
   .feedback-banner.wrong   { background: rgba(255,71,87,0.1);  border: 1px solid rgba(255,71,87,0.3);  color: #ff8a95; }
-  .feedback-banner strong { display: block; font-size: 1rem; margin-bottom: 3px; }
+  .feedback-banner strong  { display: block; font-size: 1rem; margin-bottom: 3px; }
 
-  /* ── NEXT BTN ── */
+  /* ── NAV BUTTONS ── */
+  .nav-row {
+    display: flex; gap: 10px; margin-top: 16px;
+  }
+
+  .btn-back {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 15px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.2rem; letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: none;
+  }
+  .btn-back.show { display: block; }
+  .btn-back:hover { border-color: var(--muted); color: var(--text); }
+
   .btn-next {
-    width: 100%; margin-top: 16px;
+    flex: 2;
     background: linear-gradient(135deg, #0090b3, var(--accent));
     color: #000; border: none; border-radius: 14px;
     padding: 15px; font-family: 'Bebas Neue', cursive;
@@ -251,9 +242,7 @@
   .btn-next:hover { transform: translateY(-2px); opacity: 0.9; }
 
   /* ── SCORE HUD ── */
-  .score-hud {
-    display: flex; gap: 12px; margin-bottom: 20px;
-  }
+  .score-hud { display: flex; gap: 12px; margin-bottom: 20px; }
 
   .hud-pill {
     flex: 1; background: var(--card); border: 1px solid var(--border);
@@ -265,12 +254,11 @@
   .hud-val.wrong-v   { color: var(--red); }
   .hud-label-s { font-size: 0.62rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 
-  /* ── RESULTS SCREEN ── */
+  /* ── RESULTS ── */
   .results-screen { display: none; animation: fadeUp 0.5s ease both; }
   .results-screen.show { display: block; }
 
   .results-header { text-align: center; margin-bottom: 32px; }
-
   .results-trophy { font-size: 4rem; display: block; margin-bottom: 12px; animation: bounce 1s ease infinite; }
 
   .results-title {
@@ -294,14 +282,12 @@
   .rsb-num { font-family: 'Bebas Neue', cursive; font-size: 5rem; color: var(--gold); line-height: 1; }
   .rsb-label { font-size: 0.75rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
 
-  /* Community votes table */
   .votes-section { margin-bottom: 32px; }
 
   .votes-title {
     font-family: 'Bebas Neue', cursive;
     font-size: 1.4rem; letter-spacing: 2px;
     color: var(--accent); margin-bottom: 16px;
-    display: flex; align-items: center; gap: 10px;
   }
 
   .votes-card {
@@ -316,7 +302,6 @@
     font-size: 0.78rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: 2px;
     color: var(--accent);
-    display: flex; align-items: center; gap: 8px;
   }
 
   .vote-row {
@@ -325,15 +310,15 @@
     border-bottom: 1px solid rgba(30,45,69,0.5);
     transition: background 0.15s;
   }
-
   .vote-row:last-child { border-bottom: none; }
   .vote-row.winner { background: rgba(255,215,0,0.04); }
 
   .vote-rank { font-family: 'Bebas Neue', cursive; font-size: 1rem; color: var(--muted); min-width: 20px; }
   .vote-rank.gold { color: var(--gold); }
 
-  .vote-name { flex: 1; font-size: 0.85rem; font-weight: 600; }
+  .vote-name  { flex: 1; font-size: 0.85rem; font-weight: 600; }
   .vote-maker { font-size: 0.7rem; color: var(--muted); }
+
   .vote-correct-badge {
     font-size: 0.62rem; background: rgba(255,215,0,0.15); color: var(--gold);
     border: 1px solid rgba(255,215,0,0.3); border-radius: 99px;
@@ -354,29 +339,21 @@
   }
   .btn-restart:hover { transform: scale(1.02); }
 
-  /* ── LOADING ── */
-  .loading-bar {
-    height: 2px; background: var(--border); border-radius: 99px;
-    overflow: hidden; margin-bottom: 24px;
+  /* Loading spinner for Supabase */
+  .loading-msg {
+    text-align: center; color: var(--muted); font-size: 0.82rem;
+    font-weight: 600; padding: 24px; display: none;
   }
-  .loading-fill {
-    height: 100%; width: 0%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 99px;
-    animation: loadAnim 1.5s ease forwards;
-  }
-  @keyframes loadAnim { to { width: 100%; } }
+  .loading-msg.show { display: block; }
 
   @keyframes slideIn {
     from { opacity: 0; transform: translateY(24px) scale(0.97); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
-
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   @keyframes bounce {
     0%,100% { transform: translateY(0); }
     50%      { transform: translateY(-10px); }
@@ -388,17 +365,15 @@
 
   <header>
     <div class="logo">AI Arena</div>
-    <div class="logo-sub">⚡ Who's the Best? · Community Quiz</div>
+    <div class="logo-sub">⚡ Who's the Best? · Community Poll</div>
   </header>
 
-  <!-- Score HUD -->
   <div class="score-hud">
     <div class="hud-pill"><div class="hud-val correct-v" id="hud-correct">0</div><div class="hud-label-s">✓ Correct</div></div>
     <div class="hud-pill"><div class="hud-val wrong-v"   id="hud-wrong">0</div><div class="hud-label-s">✗ Wrong</div></div>
     <div class="hud-pill"><div class="hud-val"           id="hud-q">1/5</div><div class="hud-label-s">Question</div></div>
   </div>
 
-  <!-- Progress dots -->
   <div class="progress-strip" id="progress-strip">
     <div class="progress-dot current" id="dot-0"></div>
     <div class="progress-dot" id="dot-1"></div>
@@ -408,10 +383,8 @@
     <div class="progress-label" id="progress-label">Q1 of 5</div>
   </div>
 
-  <!-- Quiz area -->
   <div id="quiz-area"></div>
 
-  <!-- Results screen -->
   <div class="results-screen" id="results-screen">
     <div class="results-header">
       <span class="results-trophy" id="trophy-icon">🏆</span>
@@ -424,6 +397,7 @@
       <div class="rsb-label">correct out of 5</div>
     </div>
 
+    <div class="loading-msg" id="loading-votes">⏳ Loading community votes…</div>
     <div class="votes-section" id="votes-section"></div>
 
     <button class="btn-restart" onclick="restartQuiz()">🔄 Play Again</button>
@@ -432,6 +406,86 @@
 </div>
 
 <script>
+// ── SUPABASE CONFIG ──
+const SUPABASE_URL = 'https://adjysmsqxqtmybcumxbw.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkanlzbXNxeHF0bXliY3VteGJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNzMzMjIsImV4cCI6MjA4ODg0OTMyMn0.nt_rONQpZZF4fsK7BocRCFQ_7vH-z3qDInCSu_GIXsQ';
+
+const HEADERS = {
+  'apikey': SUPABASE_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=minimal'
+};
+
+async function supabaseAddVote(questionId, optionIndex) {
+  try {
+    // Increment the count by 1 using RPC or direct update
+    const url = `${SUPABASE_URL}/rest/v1/rpc/increment_vote`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify({ q_id: questionId, o_index: optionIndex })
+    });
+    if (!res.ok) {
+      // Fallback: direct update
+      await fetch(`${SUPABASE_URL}/rest/v1/votes?question_id=eq.${questionId}&option_index=eq.${optionIndex}`, {
+        method: 'PATCH',
+        headers: { ...HEADERS, 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ count: null }) // will use raw SQL below
+      });
+    }
+  } catch(e) {
+    console.warn('Vote recording failed:', e);
+  }
+}
+
+async function supabaseIncrementVote(questionId, optionIndex) {
+  // Read current count, then write count+1
+  try {
+    const getRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/votes?question_id=eq.${questionId}&option_index=eq.${optionIndex}&select=count`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+    );
+    const rows = await getRes.json();
+    if (rows && rows.length > 0) {
+      const newCount = (rows[0].count || 0) + 1;
+      await fetch(
+        `${SUPABASE_URL}/rest/v1/votes?question_id=eq.${questionId}&option_index=eq.${optionIndex}`,
+        {
+          method: 'PATCH',
+          headers: HEADERS,
+          body: JSON.stringify({ count: newCount })
+        }
+      );
+    }
+  } catch(e) {
+    console.warn('Supabase vote error:', e);
+  }
+}
+
+async function supabaseGetAllVotes() {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/votes?select=question_id,option_index,count&order=question_id,option_index`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+    );
+    const rows = await res.json();
+    // Convert to { image: [0,0,0,0,0], video: [...], ... }
+    const result = {};
+    QUESTIONS.forEach(q => { result[q.id] = [0,0,0,0,0]; });
+    rows.forEach(row => {
+      if (result[row.question_id] !== undefined) {
+        result[row.question_id][row.option_index] = row.count || 0;
+      }
+    });
+    return result;
+  } catch(e) {
+    console.warn('Supabase fetch error:', e);
+    return null;
+  }
+}
+
+// ── QUESTIONS ──
 const QUESTIONS = [
   {
     id: 'image',
@@ -507,37 +561,12 @@ const QUESTIONS = [
 
 const LETTERS = ['A','B','C','D','E'];
 
-// ── Shared vote storage (localStorage as shared simulation)
-// In a real deployment, replace with a backend/Supabase call
-const STORAGE_KEY = 'ai_arena_votes_v1';
-
-function getVotes() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  // Start from zero — no fake seeding
-  return {
-    image:   [0, 0, 0, 0, 0],
-    video:   [0, 0, 0, 0, 0],
-    tts:     [0, 0, 0, 0, 0],
-    stt:     [0, 0, 0, 0, 0],
-    writing: [0, 0, 0, 0, 0],
-  };
-}
-
-function addVote(qId, optionIdx) {
-  const votes = getVotes();
-  votes[qId][optionIdx]++;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
-}
-
-// ── State
+// ── STATE ──
 let currentQ = 0;
-let userAnswers = [];
+let userAnswers = [];   // stores original option index per question
 let correctCount = 0;
 let wrongCount = 0;
-let shuffledOrders = []; // shuffled display order per question
+let shuffledOrders = [];
 
 function buildShuffledOrders() {
   shuffledOrders = QUESTIONS.map(q => {
@@ -550,23 +579,57 @@ function buildShuffledOrders() {
   });
 }
 
+// ── RENDER ──
 function renderQuestion() {
   const q = QUESTIONS[currentQ];
   const order = shuffledOrders[currentQ];
   const area = document.getElementById('quiz-area');
+  const alreadyAnswered = userAnswers[currentQ] !== undefined;
+  const userOrigIdx = userAnswers[currentQ];
 
   const optionsHTML = order.map((origIdx, displayPos) => {
     const opt = q.options[origIdx];
+    let extraClass = '';
+    let iconText = '';
+
+    if (alreadyAnswered) {
+      if (origIdx === userOrigIdx) {
+        extraClass = origIdx === q.correct ? 'selected-correct' : 'selected-wrong';
+        iconText = origIdx === q.correct ? '✓' : '✗';
+      } else if (origIdx === q.correct) {
+        extraClass = 'reveal-correct';
+        iconText = '★';
+      }
+    }
+
     return `
-    <button class="option-btn" id="opt-${displayPos}" onclick="selectAnswer(${displayPos})">
-      <div class="option-letter">${LETTERS[displayPos]}</div>
-      <div class="option-text">
-        <div class="option-name">${opt.name}</div>
-        <div class="option-maker">${opt.maker}</div>
-      </div>
-      <div class="option-result-icon" id="icon-${displayPos}"></div>
-    </button>
-  `}).join('');
+      <button class="option-btn ${extraClass}" id="opt-${displayPos}"
+        onclick="selectAnswer(${displayPos})"
+        ${alreadyAnswered ? 'disabled' : ''}>
+        <div class="option-letter">${LETTERS[displayPos]}</div>
+        <div class="option-text">
+          <div class="option-name">${opt.name}</div>
+          <div class="option-maker">${opt.maker}</div>
+        </div>
+        <div class="option-result-icon">${iconText}</div>
+      </button>
+    `;
+  }).join('');
+
+  // Rebuild feedback if already answered
+  let feedbackHTML = '';
+  if (alreadyAnswered) {
+    const correctName  = q.options[q.correct].name;
+    const correctMaker = q.options[q.correct].maker;
+    const wasCorrect   = userOrigIdx === q.correct;
+    if (wasCorrect) {
+      feedbackHTML = `<div class="feedback-banner correct show"><strong>✓ Correct!</strong>Yes — <strong>${correctName}</strong> by ${correctMaker} currently leads this category on benchmark leaderboards.</div>`;
+    } else {
+      feedbackHTML = `<div class="feedback-banner wrong show"><strong>✗ Not quite!</strong>The current leader is <strong>${correctName}</strong> by ${correctMaker}.</div>`;
+    }
+  }
+
+  const isLastQ = currentQ === QUESTIONS.length - 1;
 
   area.innerHTML = `
     <div class="q-card" id="q-card">
@@ -575,14 +638,17 @@ function renderQuestion() {
       <div class="q-title">${q.title}</div>
       <div class="q-sub">${q.sub}</div>
       <div class="options">${optionsHTML}</div>
-      <div class="feedback-banner" id="feedback"></div>
-      <button class="btn-next" id="btn-next" onclick="nextQuestion()">
-        ${currentQ < QUESTIONS.length - 1 ? 'Next Question →' : 'See Results 🏆'}
-      </button>
+      ${feedbackHTML}
+      <div class="nav-row">
+        <button class="btn-back ${currentQ > 0 ? 'show' : ''}" onclick="goBack()">← Back</button>
+        <button class="btn-next ${alreadyAnswered ? 'show' : ''}" id="btn-next" onclick="nextQuestion()">
+          ${isLastQ ? 'See Results 🏆' : 'Next Question →'}
+        </button>
+      </div>
     </div>
   `;
 
-  // Update progress
+  // Update progress dots
   for (let i = 0; i < QUESTIONS.length; i++) {
     const dot = document.getElementById(`dot-${i}`);
     if (!dot) continue;
@@ -594,59 +660,63 @@ function renderQuestion() {
   document.getElementById('hud-q').textContent = `${currentQ+1}/${QUESTIONS.length}`;
 }
 
+// ── SELECT ANSWER ──
 function selectAnswer(displayPos) {
   const q = QUESTIONS[currentQ];
   const order = shuffledOrders[currentQ];
-  const origIdx = order[displayPos];              // original data index of what user clicked
-  const correctDisplayPos = order.indexOf(q.correct); // where correct answer sits on screen
+  const origIdx = order[displayPos];
+  const correctDisplayPos = order.indexOf(q.correct);
   const isCorrect = origIdx === q.correct;
 
-  // Disable all options
+  // Disable all
   order.forEach((_, dp) => {
     const btn = document.getElementById(`opt-${dp}`);
     if (btn) btn.disabled = true;
   });
 
-  // Style chosen option
+  // Style chosen
   const chosenBtn = document.getElementById(`opt-${displayPos}`);
   if (isCorrect) {
     chosenBtn.classList.add('selected-correct');
-    document.getElementById(`icon-${displayPos}`).textContent = '✓';
+    chosenBtn.querySelector('.option-result-icon').textContent = '✓';
     correctCount++;
   } else {
     chosenBtn.classList.add('selected-wrong');
-    document.getElementById(`icon-${displayPos}`).textContent = '✗';
-    // Reveal correct answer at its display position
+    chosenBtn.querySelector('.option-result-icon').textContent = '✗';
     const correctBtn = document.getElementById(`opt-${correctDisplayPos}`);
     correctBtn.classList.add('reveal-correct');
-    document.getElementById(`icon-${correctDisplayPos}`).textContent = '★';
+    correctBtn.querySelector('.option-result-icon').textContent = '★';
     wrongCount++;
   }
 
-  // Record vote using original index
-  addVote(q.id, origIdx);
-  userAnswers.push(origIdx);
+  // Save answer
+  userAnswers[currentQ] = origIdx;
+
+  // Record vote in Supabase (fire and forget)
+  supabaseIncrementVote(q.id, origIdx);
 
   // Feedback
-  const fb = document.getElementById('feedback');
-  const correctName = q.options[q.correct].name;
+  const correctName  = q.options[q.correct].name;
   const correctMaker = q.options[q.correct].maker;
-  if (isCorrect) {
-    fb.className = 'feedback-banner correct show';
-    fb.innerHTML = `<strong>✓ Correct!</strong>Yes — <strong>${correctName}</strong> by ${correctMaker} currently leads this category on benchmark leaderboards.`;
-  } else {
-    fb.className = 'feedback-banner wrong show';
-    fb.innerHTML = `<strong>✗ Not quite!</strong>The current leader is <strong>${correctName}</strong> by ${correctMaker}.`;
-  }
+  const fb = document.createElement('div');
+  fb.className = `feedback-banner ${isCorrect ? 'correct' : 'wrong'} show`;
+  fb.innerHTML = isCorrect
+    ? `<strong>✓ Correct!</strong>Yes — <strong>${correctName}</strong> by ${correctMaker} currently leads this category on benchmark leaderboards.`
+    : `<strong>✗ Not quite!</strong>The current leader is <strong>${correctName}</strong> by ${correctMaker}.`;
+
+  const card = document.getElementById('q-card');
+  const navRow = card.querySelector('.nav-row');
+  card.insertBefore(fb, navRow);
+
+  // Show next button
+  document.getElementById('btn-next').classList.add('show');
 
   // Update HUD
   document.getElementById('hud-correct').textContent = correctCount;
   document.getElementById('hud-wrong').textContent = wrongCount;
-
-  // Show next
-  document.getElementById('btn-next').classList.add('show');
 }
 
+// ── NAVIGATION ──
 function nextQuestion() {
   currentQ++;
   if (currentQ >= QUESTIONS.length) {
@@ -657,7 +727,25 @@ function nextQuestion() {
   }
 }
 
-function showResults() {
+function goBack() {
+  if (currentQ > 0) {
+    // Adjust score counts when going back
+    if (userAnswers[currentQ - 1] !== undefined) {
+      const prevQ = QUESTIONS[currentQ - 1];
+      if (userAnswers[currentQ - 1] === prevQ.correct) correctCount--;
+      else wrongCount--;
+      document.getElementById('hud-correct').textContent = correctCount;
+      document.getElementById('hud-wrong').textContent = wrongCount;
+    }
+    currentQ--;
+    // Remove last answer so they can re-view (read-only — answer already recorded)
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// ── RESULTS ──
+async function showResults() {
   document.getElementById('quiz-area').style.display = 'none';
   const rs = document.getElementById('results-screen');
   rs.classList.add('show');
@@ -665,25 +753,33 @@ function showResults() {
   document.getElementById('final-score').textContent = `${correctCount}/5`;
 
   let title, sub, trophy;
-  if (correctCount === 5)      { title='Perfect Score!'; sub='You\'re an AI expert! 🎯'; trophy='🏆'; }
-  else if (correctCount >= 3)  { title='Well Done!';     sub='You know your AI tools well.'; trophy='🥈'; }
-  else if (correctCount >= 1)  { title='Good Try!';      sub='The AI landscape moves fast — keep exploring!'; trophy='🥉'; }
-  else                          { title='Tough Round!';   sub='Now you know the current leaders!'; trophy='😅'; }
+  if (correctCount === 5)     { title='Perfect Score!'; sub="You're an AI expert! 🎯";              trophy='🏆'; }
+  else if (correctCount >= 3) { title='Well Done!';     sub='You know your AI tools well.';          trophy='🥈'; }
+  else if (correctCount >= 1) { title='Good Try!';      sub='The AI landscape moves fast — keep exploring!'; trophy='🥉'; }
+  else                         { title='Tough Round!';   sub='Now you know the current leaders!';    trophy='😅'; }
 
   document.getElementById('trophy-icon').textContent = trophy;
   document.getElementById('results-title').textContent = title;
   document.getElementById('results-sub').textContent = sub;
 
-  // Build community votes section
-  const votes = getVotes();
-  let html = '';
+  // Fetch live votes from Supabase
+  document.getElementById('loading-votes').classList.add('show');
+  const votes = await supabaseGetAllVotes();
+  document.getElementById('loading-votes').classList.remove('show');
 
-  QUESTIONS.forEach((q, qi) => {
-    const qVotes = votes[q.id];
-    const total = qVotes.reduce((a,b)=>a+b, 0);
+  if (!votes) {
+    document.getElementById('votes-section').innerHTML =
+      `<div style="color:var(--muted);text-align:center;font-size:0.85rem;padding:20px;">⚠️ Could not load community votes. Check your Supabase connection.</div>`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  let html = '';
+  QUESTIONS.forEach(q => {
+    const qVotes = votes[q.id] || [0,0,0,0,0];
+    const total = qVotes.reduce((a,b) => a+b, 0);
     const sorted = q.options.map((opt, i) => ({ opt, i, count: qVotes[i] }))
                             .sort((a,b) => b.count - a.count);
-    const maxVotes = sorted[0].count;
 
     html += `
       <div class="votes-card">
@@ -691,12 +787,12 @@ function showResults() {
         ${sorted.map((item, rank) => {
           const pct = total > 0 ? Math.round(item.count / total * 100) : 0;
           const isCorrect = item.i === q.correct;
-          const isWinner = rank === 0;
+          const isWinner  = rank === 0;
           return `
             <div class="vote-row ${isWinner ? 'winner' : ''}">
               <div class="vote-rank ${isWinner ? 'gold' : ''}">${rank+1}</div>
               <div style="flex:1">
-                <div style="display:flex;align-items:center;gap:8px;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                   <span class="vote-name">${item.opt.name}</span>
                   ${isCorrect ? '<span class="vote-correct-badge">★ Correct</span>' : ''}
                 </div>
@@ -717,13 +813,14 @@ function showResults() {
     <div class="votes-title">📊 Community Votes</div>
     ${html}
     <div style="font-size:0.72rem;color:var(--muted);text-align:center;margin-top:12px;font-weight:600;">
-      Vote counts accumulate as more people play on this device. For shared counts across all users, a backend is needed.
+      Live vote counts from all players worldwide 🌍
     </div>
   `;
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ── RESTART ──
 function restartQuiz() {
   currentQ = 0;
   userAnswers = [];
@@ -738,7 +835,7 @@ function restartQuiz() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Init
+// ── INIT ──
 buildShuffledOrders();
 renderQuestion();
 </script>
